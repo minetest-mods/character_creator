@@ -51,7 +51,7 @@ end
 local function change_skin(player)
 	local name = player:get_player_name()
 	local data = playerdata[name]
-	player:set_properties({textures = {
+	local skin = {
 		data.skin.."^"..
 		data.face.."^"..
 		data.eyes.."^"..
@@ -59,7 +59,13 @@ local function change_skin(player)
 		data.tshirt.."^"..
 		data.pants.."^"..
 		data.shoes
-	}})
+	}
+	if minetest.get_modpath("3d_armor") then
+		armor.textures[name].skin = skin
+		armor:set_player_armor(player)
+	else
+		player:set_properties({textures = skin})
+	end
 end
 
 minetest.register_chatcommand("character_creator", {
