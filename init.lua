@@ -28,16 +28,16 @@ end)
 
 local function show_formspec(name)
 	minetest.show_formspec(name, "character_creator",
-		"size[15,10]"..
+		"size[15,9]"..
 		"button_exit[,;2,.5;;Close]"..
 		"textlist[0.00,0.75;3.75,4;cc_skin;"..skin..";1;true]"..
 		"textlist[3.75,0.75;3.75,4;cc_face;"..face..";1;true]"..
 		"textlist[7.50,0.75;3.75,4;cc_hair;"..hair..";1;true]"..
 		"textlist[11.25,0.75;3.75,4;cc_hair_style;"..hair_style..";1;true]"..
-		"textlist[0.00,4.75;3.75,4;cc_eyes;"..eyes..";1;true]"..
-		"textlist[3.75,4.75;3.75,4;cc_tshirt;"..tshirt..";1;true]"..
-		"textlist[7.50,4.75;3.75,4;cc_pants;"..pants..";1;true]"..
-		"textlist[11.25,4.75;3.75,4;cc_shoes;"..shoes..";1;true]"
+		"textlist[0.00,5;3.75,4;cc_eyes;"..eyes..";1;true]"..
+		"textlist[3.75,5;3.75,4;cc_tshirt;"..tshirt..";1;true]"..
+		"textlist[7.50,5;3.75,4;cc_pants;"..pants..";1;true]"..
+		"textlist[11.25,5;3.75,4;cc_shoes;"..shoes..";1;true]"
 	)
 end
 
