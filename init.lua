@@ -119,24 +119,32 @@ minetest.register_on_player_receive_fields(function(player, _, fields)
 	if e_skin.type == "CHG" then
 		local face_name = face:split(",")[e_face.index] or old_param[name].face
 		local skin_name = skin:split(",")[e_skin.index]
-		playerdata[name].skin = cc.skin[skin_name]
-		playerdata[name].face = cc.face[face_name][skin_name]
-		old_param[name].skin = skin_name
+		if cc.face[face_name][skin_name] then
+			playerdata[name].skin = cc.skin[skin_name]
+			playerdata[name].face = cc.face[face_name][skin_name]
+			old_param[name].skin = skin_name
+		end
 	elseif e_face.type == "CHG" then
 		local face_name = face:split(",")[e_face.index]
 		local skin_name = skin:split(",")[e_skin.index] or old_param[name].skin
-		playerdata[name].face = cc.face[face_name][skin_name]
-		old_param[name].face = face_name
+		if cc.face[face_name][skin_name] then
+			playerdata[name].face = cc.face[face_name][skin_name]
+			old_param[name].face = face_name
+		end
 	elseif e_hair.type == "CHG" then
 		local hair_name = hair:split(",")[e_hair.index]
 		local hair_style_name = hair_style:split(",")[e_hair_style.index] or old_param[name].hair_style
-		playerdata[name].hair = cc.hair[hair_name][hair_style_name]
-		old_param[name].hair = hair_name
+		if cc.hair[hair_name][hair_style_name] then
+			playerdata[name].hair = cc.hair[hair_name][hair_style_name]
+			old_param[name].hair = hair_name
+		end
 	elseif e_hair_style.type == "CHG" then
 		local hair_name = hair:split(",")[e_hair.index] or old_param[name].hair
 		local hair_style_name = hair_style:split(",")[e_hair_style.index]
-		playerdata[name].hair = cc.hair[hair_name][hair_style_name]
-		old_param[name].hair_style = hair_style_name
+		if cc.hair[hair_name][hair_style_name] then
+			playerdata[name].hair = cc.hair[hair_name][hair_style_name]
+			old_param[name].hair_style = hair_style_name
+		end
 	elseif e_eyes.type == "CHG" then
 		local eyes_name = eyes:split(",")[e_eyes.index]
 		playerdata[name].eyes = cc.eyes[eyes_name]
