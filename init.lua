@@ -14,14 +14,17 @@ local function table_to_list(tbl)
 	return list
 end
 
-local skin = table_to_list(cc.skin)
-local face = table_to_list(cc.face)
-local hair = table_to_list(cc.hair)
-local hair_style = table_to_list(cc.hair_style)
-local eyes = table_to_list(cc.eyes)
-local tshirt = table_to_list(cc.tshirt)
-local pants = table_to_list(cc.pants)
-local shoes = table_to_list(cc.shoes)
+local skin, face, hair, hair_style, eyes, tshirt, pants, shoes
+minetest.after(0, function()
+	skin = table_to_list(cc.skin)
+	face = table_to_list(cc.face)
+	hair = table_to_list(cc.hair)
+	hair_style = table_to_list(cc.hair_style)
+	eyes = table_to_list(cc.eyes)
+	tshirt = table_to_list(cc.tshirt)
+	pants = table_to_list(cc.pants)
+	shoes = table_to_list(cc.shoes)
+end)
 
 local function show_formspec(name)
 	minetest.show_formspec(name, "character_creator",
