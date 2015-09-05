@@ -1,3 +1,14 @@
+--[[
+TODO List
+
+Cape
+Glasses(Accessories)
+Face Style(Sam style, this style, MC style, etc.)
+Colorize Textures(But Sokomine was against)
+Skin Preview
+Randomize Skin
+]]
+
 character_creator = {}
 local cc = character_creator
 
@@ -6,44 +17,81 @@ local datafile = minetest.get_worldpath().."/character_creator.mt"
 
 dofile(modpath.."/skins.lua")
 
-local function table_to_list(tbl)
-	local list = ""
+local function to_numberkey_table(tbl)
+	local tbl2 = {}
 	for str in pairs(tbl) do
-		list = list == "" and str or list..","..str
+		tbl2[#tbl2+1] = str
 	end
-	return list
+	return tbl2
 end
 
-local skin, face, hair, hair_style, eyes, tshirt, pants, shoes
+local skins = {}
 minetest.after(0, function()
-	skin = table_to_list(cc.skin)
-	face = table_to_list(cc.face)
-	hair = table_to_list(cc.hair)
-	hair_style = table_to_list(cc.hair_style)
-	eyes = table_to_list(cc.eyes)
-	tshirt = table_to_list(cc.tshirt)
-	pants = table_to_list(cc.pants)
-	shoes = table_to_list(cc.shoes)
+	skins = {
+		skin = to_numberkey_table(cc.skin),
+		face = to_numberkey_table(cc.face),
+		hair = to_numberkey_table(cc.hair),
+		hair_style = to_numberkey_table(cc.hair_style),
+		eyes = to_numberkey_table(cc.eyes),
+		tshirt = to_numberkey_table(cc.tshirt),
+		pants = to_numberkey_table(cc.pants),
+		shoes = to_numberkey_table(cc.shoes),
+	}
 end)
 
+local playerdata = {}
+
 local function show_formspec(name)
+	local data = playerdata[name]
 	minetest.show_formspec(name, "character_creator",
-		"size[15,9]"..
-		"button_exit[,;2,.5;;Close]"..
-		"textlist[0.00,0.75;3.75,4;cc_skin;"..skin..";1;true]"..
-		"textlist[3.75,0.75;3.75,4;cc_face;"..face..";1;true]"..
-		"textlist[7.50,0.75;3.75,4;cc_hair;"..hair..";1;true]"..
-		"textlist[11.25,0.75;3.75,4;cc_hair_style;"..hair_style..";1;true]"..
-		"textlist[0.00,5;3.75,4;cc_eyes;"..eyes..";1;true]"..
-		"textlist[3.75,5;3.75,4;cc_tshirt;"..tshirt..";1;true]"..
-		"textlist[7.50,5;3.75,4;cc_pants;"..pants..";1;true]"..
-		"textlist[11.25,5;3.75,4;cc_shoes;"..shoes..";1;true]"
+		"size[15,9.5]"..
+		"bgcolor[#00000000]"..
+		-- Gender
+		"button[10,;2.5,.5;cc_male;Male]"..
+		"button[12.5,;2.5,.5;cc_female;Female]"..
+		-- Height
+		"button[10,1.1;2.5,.5;cc_taller;Taller]"..
+		"button[10,2;2.5,.5;cc_shorter;Shorter]"..
+		-- Width
+		"button[12.5,1.1;2.5,.5;cc_wider;Wider]"..
+		"button[12.5,2;2.5,.5;cc_thinner;Thinner]"..
+		-- Skin
+		"button[10,2.75;5,1;cc_skin;"..skins.skin[data.skin].."]"..
+		"button[10,2.75;1,1;cc_skin_back;<<]"..
+		"button[14,2.75;1,1;cc_skin_next;>>]"..
+		-- Face
+		"button[10,3.5;5,1;cc_face;"..skins.face[data.face].."]"..
+		"button[10,3.5;1,1;cc_face_back;<<]"..
+		"button[14,3.5;1,1;cc_face_next;>>]"..
+		-- Hair
+		"button[10,4.25;5,1;cc_hair;"..skins.hair[data.hair].."]"..
+		"button[10,4.25;1,1;cc_hair_back;<<]"..
+		"button[14,4.25;1,1;cc_hair_next;>>]"..
+		-- Hair Style
+		"button[10,5;5,1;cc_hair_style;"..skins.hair_style[data.hair_style].."]"..
+		"button[10,5;1,1;cc_hair_style_back;<<]"..
+		"button[14,5;1,1;cc_hair_style_next;>>]"..
+		-- Eyes
+		"button[10,5.75;5,1;cc_eyes;"..skins.eyes[data.eyes].."]"..
+		"button[10,5.75;1,1;cc_eyes_back;<<]"..
+		"button[14,5.75;1,1;cc_eyes_next;>>]"..
+		-- T-Shirt
+		"button[10,6.5;5,1;cc_tshirt;"..skins.tshirt[data.tshirt].."]"..
+		"button[10,6.5;1,1;cc_tshirt_back;<<]"..
+		"button[14,6.5;1,1;cc_tshirt_next;>>]"..
+		-- Pants
+		"button[10,7.25;5,1;cc_pants;"..skins.pants[data.pants].."]"..
+		"button[10,7.25;1,1;cc_pants_back;<<]"..
+		"button[14,7.25;1,1;cc_pants_next;>>]"..
+		-- Shoes
+		"button[10,8;5,1;cc_shoes;"..skins.shoes[data.shoes].."]"..
+		"button[10,8;1,1;cc_shoes_back;<<]"..
+		"button[14,8;1,1;cc_shoes_next;>>]"..
+		-- Done
+		"button_exit[10,9;2.5,.5;cc_done;Done]"..
+		"button_exit[12.5,9;2.5,.5;cc_cancel;Cancel]"
 	)
 end
-
--- MEMO:skin>face>hair(hairstyle)>eyes>tshirt>pants>shoes
-
-local playerdata = {}
 
 local input = io.open(datafile, "r")
 if input then
@@ -51,115 +99,142 @@ if input then
 	input:close()
 end
 
-local function change_skin(player)
-	local name = player:get_player_name()
-	local data = playerdata[name]
-	local skin = {
-		data.skin.."^"..
-		data.face.."^"..
-		data.eyes.."^"..
-		data.hair.."^"..
-		data.tshirt.."^"..
-		data.pants.."^"..
-		data.shoes
-	}
-	if minetest.get_modpath("3d_armor") then
-		armor.textures[name].skin = skin
-		armor:set_player_armor(player)
-	else
-		player:set_properties({textures = skin})
-	end
-end
-
-minetest.register_chatcommand("character_creator", {
-	func = function(name)
-		minetest.after(.1, show_formspec, name)
-	end
-})
-
-local old_param = {}
-
-minetest.register_on_joinplayer(function(player)
-	local name = player:get_player_name()
-	playerdata[name] = playerdata[name] or {
-		skin = "cc_skin_fair.png",
-		face = "cc_face_human_fair_M.png",
-		hair = "cc_hair_medium_brown_M.png",
-		eyes = "cc_eyes_brown.png",
-		tshirt = "cc_tshirt_green.png",
-		pants = "cc_pants_blue.png",
-		shoes = "cc_shoes_leather.png",
-	}
-	old_param[name] = {
-		skin = "Fair Skin",
-		face = "Human Face (Male)",
-		hair = "Brown Hair (Male)",
-		hair_style = "Medium Hair",
-	}
-	minetest.after(0, change_skin, player)
-end)
-
 minetest.register_on_shutdown(function()
 	local output = io.open(datafile, "w")
 	output:write(minetest.serialize(playerdata))
 	output.close()
 end)
 
-minetest.register_on_player_receive_fields(function(player, _, fields)
+local function change_skin(player)
 	local name = player:get_player_name()
-	local e_skin = minetest.explode_textlist_event(fields.cc_skin)
-	local e_face = minetest.explode_textlist_event(fields.cc_face)
-	local e_hair = minetest.explode_textlist_event(fields.cc_hair)
-	local e_hair_style = minetest.explode_textlist_event(fields.cc_hair_style)
-	local e_eyes = minetest.explode_textlist_event(fields.cc_eyes)
-	local e_tshirt = minetest.explode_textlist_event(fields.cc_tshirt)
-	local e_pants = minetest.explode_textlist_event(fields.cc_pants)
-	local e_shoes = minetest.explode_textlist_event(fields.cc_shoes)
+	local data = playerdata[name]
 
-	if e_skin.type == "CHG" then
-		local face_name = face:split(",")[e_face.index] or old_param[name].face
-		local skin_name = skin:split(",")[e_skin.index]
-		if cc.face[face_name][skin_name] then
-			playerdata[name].skin = cc.skin[skin_name]
-			playerdata[name].face = cc.face[face_name][skin_name]
-			old_param[name].skin = skin_name
-		end
-	elseif e_face.type == "CHG" then
-		local face_name = face:split(",")[e_face.index]
-		local skin_name = skin:split(",")[e_skin.index] or old_param[name].skin
-		if cc.face[face_name][skin_name] then
-			playerdata[name].face = cc.face[face_name][skin_name]
-			old_param[name].face = face_name
-		end
-	elseif e_hair.type == "CHG" then
-		local hair_name = hair:split(",")[e_hair.index]
-		local hair_style_name = hair_style:split(",")[e_hair_style.index] or old_param[name].hair_style
-		if cc.hair[hair_name][hair_style_name] then
-			playerdata[name].hair = cc.hair[hair_name][hair_style_name]
-			old_param[name].hair = hair_name
-		end
-	elseif e_hair_style.type == "CHG" then
-		local hair_name = hair:split(",")[e_hair.index] or old_param[name].hair
-		local hair_style_name = hair_style:split(",")[e_hair_style.index]
-		if cc.hair[hair_name][hair_style_name] then
-			playerdata[name].hair = cc.hair[hair_name][hair_style_name]
-			old_param[name].hair_style = hair_style_name
-		end
-	elseif e_eyes.type == "CHG" then
-		local eyes_name = eyes:split(",")[e_eyes.index]
-		playerdata[name].eyes = cc.eyes[eyes_name]
-	elseif e_tshirt.type == "CHG" then
-		local tshirt_name = tshirt:split(",")[e_tshirt.index]
-		playerdata[name].tshirt = cc.tshirt[tshirt_name]
-	elseif e_pants.type == "CHG" then
-		local pants_name = pants:split(",")[e_pants.index]
-		playerdata[name].pants = cc.pants[pants_name]
-	elseif e_shoes.type == "CHG" then
-		local shoes_name = shoes:split(",")[e_shoes.index]
-		playerdata[name].shoes = cc.shoes[shoes_name]
+	local textures = {
+		cc.skin[skins.skin[data.skin]].."^"..
+		cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]].."^"..
+		cc.eyes[skins.eyes[data.eyes]].."^"..
+		cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]].."^"..
+		cc.tshirt[skins.tshirt[data.tshirt]].."^"..
+		cc.pants[skins.pants[data.pants]].."^"..
+		cc.shoes[skins.shoes[data.shoes]]
+	}
+
+	player:set_properties({
+		visual_size = {x=data.width, y=data.height}
+	})
+
+	if minetest.get_modpath("3d_armor") then
+		armor.textures[name].skin = textures[1]
+		armor:set_player_armor(player)
+	else
+		player:set_properties({textures = textures})
 	end
+end
+
+local skin_def = {
+	gender = "Male",
+	height = 1,
+	width = 1,
+	skin = 4,
+	face = 4,
+	hair = 8,
+	hair_style = 3,
+	eyes = 5,
+	tshirt = 4,
+	pants = 1,
+	shoes = 3,
+}
+
+minetest.register_on_joinplayer(function(player)
+	local name = player:get_player_name()
+	playerdata[name] = playerdata[name] or skin_def
+
+	for k, v in pairs(skin_def) do
+		if (k == "gender" and type(playerdata[name][k]) ~= "string")
+		or (k ~= "gender" and type(playerdata[name][k]) ~= "number") then
+			playerdata[name][k] = v
+		end
+	end
+
+	minetest.after(0, change_skin, player)
+end)
+
+local function switch_data(tbl, currrent_data, param)
+	local data = currrent_data+param
+	if tbl[data] then
+		return data
+	elseif data == 0 then
+		return #tbl
+	else
+		return 1
+	end
+end
+
+local skin_temp = {}
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= "character_creator" then
+		return
+	end
+
+	local name = player:get_player_name()
+	local data = playerdata[name]
+
+	skin_temp[name] = skin_temp[name] or table.copy(data)
+
+	if fields.cc_male then
+		data.gender = "Male"
+		data.width = 1
+		data.height = 1
+	elseif fields.cc_female then
+		data.gender = "Female"
+		data.width = 0.95
+		data.height = 1
+	end
+
+	if fields.cc_taller
+	and data.height < 1.25 then
+		data.height = data.height+0.05
+	elseif fields.cc_shorter
+	and data.height > 0.75 then
+		data.height = data.height-0.05
+	end
+
+	if fields.cc_wider
+	and data.width < 1.25 then
+		data.width = data.width+0.05
+	elseif fields.cc_thinner
+	and data.width > 0.75 then
+		data.width = data.width-0.05
+	end
+
+	for field in pairs(fields) do
+		if field:match("_back") then
+			local dataname = field:sub(4, -6)
+			data[dataname] = switch_data(skins[dataname], data[dataname], -1)
+		elseif field:match("_next") then
+			local dataname = field:sub(4, -6)
+			data[dataname] = switch_data(skins[dataname], data[dataname], 1)
+		end
+	end
+
+	if fields.cc_done then
+		skin_temp[name] = nil
+	elseif fields.cc_cancel then
+		playerdata[name] = table.copy(skin_temp[name])
+		skin_temp[name] = nil
+	elseif not fields.quit then
+		show_formspec(name)
+	end
+
 	change_skin(player)
 end)
+
+minetest.register_chatcommand("character_creator", {
+	func = function(name)
+		minetest.after(.1, show_formspec, name)
+	end
+})
 
 if rawget(_G, "unified_inventory") then
 	unified_inventory.register_button("character_creator", {
