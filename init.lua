@@ -109,15 +109,18 @@ local function change_skin(player)
 	local name = player:get_player_name()
 	local data = playerdata[name]
 
-	local textures = {
-		cc.skin[skins.skin[data.skin]].."^"..
-		cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]].."^"..
-		cc.eyes[skins.eyes[data.eyes]].."^"..
-		cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]].."^"..
-		cc.tshirt[skins.tshirt[data.tshirt]].."^"..
-		cc.pants[skins.pants[data.pants]].."^"..
-		cc.shoes[skins.shoes[data.shoes]]
-	}
+	local textures
+	pcall(function()
+		textures = {
+			cc.skin[skins.skin[data.skin]].."^"..
+			cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]].."^"..
+			cc.eyes[skins.eyes[data.eyes]].."^"..
+			cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]].."^"..
+			cc.tshirt[skins.tshirt[data.tshirt]].."^"..
+			cc.pants[skins.pants[data.pants]].."^"..
+			cc.shoes[skins.shoes[data.shoes]]
+		}
+	end)
 
 	player:set_properties({
 		visual_size = {x=data.width, y=data.height}
