@@ -7,6 +7,7 @@ Face Style(Sam style, this style, MC style, etc.)
 Colorize Textures(But Sokomine was against)
 Skin Preview
 Randomize Skin
+Button Position
 ]]
 
 character_creator = {}
@@ -35,7 +36,7 @@ minetest.after(0, function()
 		eyes = to_numberkey_table(cc.eyes),
 		tshirt = to_numberkey_table(cc.tshirt),
 		pants = to_numberkey_table(cc.pants),
-		shoes = to_numberkey_table(cc.shoes),
+		shoes = to_numberkey_table(cc.shoes)
 	}
 end)
 
@@ -109,17 +110,15 @@ local function change_skin(player)
 	local name = player:get_player_name()
 	local data = playerdata[name]
 
-	local textures
+	local texture
 	pcall(function()
-		textures = {
-			cc.skin[skins.skin[data.skin]].."^"..
+		texture = cc.skin[skins.skin[data.skin]].."^"..
 			cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]].."^"..
 			cc.eyes[skins.eyes[data.eyes]].."^"..
 			cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]].."^"..
 			cc.tshirt[skins.tshirt[data.tshirt]].."^"..
 			cc.pants[skins.pants[data.pants]].."^"..
 			cc.shoes[skins.shoes[data.shoes]]
-		}
 	end)
 
 	player:set_properties({
@@ -127,10 +126,10 @@ local function change_skin(player)
 	})
 
 	if minetest.get_modpath("3d_armor") then
-		armor.textures[name].skin = textures[1]
+		armor.textures[name].skin = texture
 		armor:set_player_armor(player)
 	else
-		player:set_properties({textures = textures})
+		player:set_properties({textures={texture}})
 	end
 end
 
@@ -145,7 +144,7 @@ local skin_def = {
 	eyes = 5,
 	tshirt = 4,
 	pants = 1,
-	shoes = 3,
+	shoes = 3
 }
 
 minetest.register_on_joinplayer(function(player)
@@ -212,21 +211,20 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	for field in pairs(fields) do
+		local dataname = field:sub(4, -6)
 		if field:match("_back") then
-			local dataname = field:sub(4, -6)
 			data[dataname] = switch_data(skins[dataname], data[dataname], -1)
 		elseif field:match("_next") then
-			local dataname = field:sub(4, -6)
 			data[dataname] = switch_data(skins[dataname], data[dataname], 1)
 		end
 	end
 
-	if fields.cc_done then
+	if fields.cc_done or fields.quit then
 		skin_temp[name] = nil
 	elseif fields.cc_cancel then
 		playerdata[name] = table.copy(skin_temp[name])
 		skin_temp[name] = nil
-	elseif not fields.quit then
+	else
 		show_formspec(name)
 	end
 
