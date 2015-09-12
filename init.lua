@@ -106,33 +106,6 @@ minetest.register_on_shutdown(function()
 	output.close()
 end)
 
-local function change_skin(player)
-	local name = player:get_player_name()
-	local data = playerdata[name]
-
-	local texture
-	pcall(function()
-		texture = cc.skin[skins.skin[data.skin]].."^"..
-			cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]].."^"..
-			cc.eyes[skins.eyes[data.eyes]].."^"..
-			cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]].."^"..
-			cc.tshirt[skins.tshirt[data.tshirt]].."^"..
-			cc.pants[skins.pants[data.pants]].."^"..
-			cc.shoes[skins.shoes[data.shoes]]
-	end)
-
-	player:set_properties({
-		visual_size = {x=data.width, y=data.height}
-	})
-
-	if minetest.get_modpath("3d_armor") then
-		armor.textures[name].skin = texture
-		armor:set_player_armor(player)
-	else
-		player:set_properties({textures={texture}})
-	end
-end
-
 local skin_def = {
 	gender = "Male",
 	height = 1,
@@ -147,9 +120,40 @@ local skin_def = {
 	shoes = 3
 }
 
+local function change_skin(player)
+	local name = player:get_player_name()
+	local data = playerdata[name]
+
+	local texture
+	local flag = pcall(function()
+		texture = cc.skin[skins.skin[data.skin]].."^"..
+			cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]].."^"..
+			cc.eyes[skins.eyes[data.eyes]].."^"..
+			cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]].."^"..
+			cc.tshirt[skins.tshirt[data.tshirt]].."^"..
+			cc.pants[skins.pants[data.pants]].."^"..
+			cc.shoes[skins.shoes[data.shoes]]
+	end)
+
+	if not flag then
+		playerdata[name] = table.copy(skin_def)
+	end
+
+	player:set_properties({
+		visual_size = {x=data.width, y=data.height}
+	})
+
+	if minetest.get_modpath("3d_armor") then
+		armor.textures[name].skin = texture
+		armor:set_player_armor(player)
+	else
+		player:set_properties({textures={texture}})
+	end
+end
+
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	playerdata[name] = playerdata[name] or skin_def
+	playerdata[name] = playerdata[name] or table.copy(skin_def)
 
 	for k, v in pairs(skin_def) do
 		if (k == "gender" and type(playerdata[name][k]) ~= "string")
