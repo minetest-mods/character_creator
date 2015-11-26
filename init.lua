@@ -103,7 +103,7 @@ end
 minetest.register_on_shutdown(function()
 	local output = io.open(datafile, "w")
 	output:write(minetest.serialize(playerdata))
-	output.close()
+	output:close()
 end)
 
 local skin_def = {
