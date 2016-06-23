@@ -149,6 +149,11 @@ local function change_skin(player)
 	else
 		player:set_properties({textures={texture}})
 	end
+
+	-- Save data right now, as the on_shutdown is not fail safe
+	local output = io.open(datafile, "w")
+	output:write(minetest.serialize(playerdata))
+	output:close()
 end
 
 minetest.register_on_joinplayer(function(player)
