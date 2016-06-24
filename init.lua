@@ -100,12 +100,6 @@ if input then
 	input:close()
 end
 
-minetest.register_on_shutdown(function()
-	local output = io.open(datafile, "w")
-	output:write(minetest.serialize(playerdata))
-	output:close()
-end)
-
 local skin_def = {
 	gender = "Male",
 	height = 1,
@@ -149,6 +143,11 @@ local function change_skin(player)
 	else
 		player:set_properties({textures={texture}})
 	end
+
+	-- Save data
+	local output = io.open(datafile, "w")
+	output:write(minetest.serialize(playerdata))
+	output:close()
 end
 
 minetest.register_on_joinplayer(function(player)
