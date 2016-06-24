@@ -100,12 +100,6 @@ if input then
 	input:close()
 end
 
-minetest.register_on_shutdown(function()
-	local output = io.open(datafile, "w")
-	output:write(minetest.serialize(playerdata))
-	output:close()
-end)
-
 local skin_def = {
 	gender = "Male",
 	height = 1,
@@ -150,7 +144,7 @@ local function change_skin(player)
 		player:set_properties({textures={texture}})
 	end
 
-	-- Save data right now, as the on_shutdown is not fail safe
+	-- Save data
 	local output = io.open(datafile, "w")
 	output:write(minetest.serialize(playerdata))
 	output:close()
