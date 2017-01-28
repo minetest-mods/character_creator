@@ -136,12 +136,17 @@ local function change_skin(player)
 	player:set_properties({
 		visual_size = {x=data.width, y=data.height}
 	})
-
-	if minetest.get_modpath("3d_armor") then
-		armor.textures[name].skin = texture
+	if minetest.get_modpath("multiskin") then
+		multiskin.layers[name].skin = texture
 		armor:set_player_armor(player)
-	else
-		player:set_properties({textures={texture}})
+		multiskin:set_player_textures(player,{textures={texture}})
+		else
+			if minetest.get_modpath("3d_armor") then
+			armor.textures[name].skin = texture
+			armor:set_player_armor(player)
+		else
+			player:set_properties({textures={texture}})
+		end
 	end
 
 	-- Save data
