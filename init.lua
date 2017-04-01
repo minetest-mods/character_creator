@@ -98,7 +98,6 @@ end
 
 local function load_skin(player)
 	skin_indexes[player] = {}
-	local indexes = skin_indexes[player]
 
 	if not player:get_attribute("character_creator:gender") then
 		player:set_attribute("character_creator:gender", skin_default.gender)
@@ -112,89 +111,42 @@ local function load_skin(player)
 		player:set_attribute("character_creator:height", skin_default.height)
 	end
 
-	local skin_key   = player:get_attribute("character_creator:skin")
-	local skin_index = table.indexof(skins_array.skin, skin_key)
-	if skin_index == -1 then
-		skin_index = table.indexof(skins_array.skin, skin_default.skin)
-	end
-	indexes.skin = skin_index
+	local function load_data(data_name)
+		local key   = player:get_attribute("character_creator:" .. data_name)
+		local index = table.indexof(skins_array[data_name], key)
+		if index == -1 then
+			index = table.indexof(skins_array[data_name], skin_default[data_name])
+		end
 
-	local face_key = player:get_attribute("character_creator:face")
-	local face_index = table.indexof(skins_array.face, face_key)
-	if face_index == -1 then
-		face_index = table.indexof(skins_array.face, skin_default.face)
+		local indexes = skin_indexes[player]
+		indexes[data_name] = index
 	end
-	indexes.face = face_index
 
-	local eyes_key = player:get_attribute("character_creator:eyes")
-	local eyes_index = table.indexof(skins_array.eyes, eyes_key)
-	if eyes_index == -1 then
-		eyes_index = table.indexof(skins_array.eyes, skin_default.eyes)
-	end
-	indexes.eyes = eyes_index
-
-	local hair_style = player:get_attribute("character_creator:hair_style")
-	local hair_style_index = table.indexof(skins_array.hair_style, hair_style)
-	if hair_style_index == -1 then
-		hair_style_index = table.indexof(skins_array.hair_style, skin_default.hair_style)
-	end
-	indexes.hair_style = hair_style_index
-
-	local hair_key = player:get_attribute("character_creator:hair")
-	local hair_index = table.indexof(skins_array.hair, hair_key)
-	if hair_index == -1 then
-		hair_index = table.indexof(skins_array.hair, skin_default.hair)
-	end
-	indexes.hair = hair_index
-
-	local tshirt_key = player:get_attribute("character_creator:tshirt")
-	local tshirt_index = table.indexof(skins_array.tshirt, tshirt_key)
-	if tshirt_index == -1 then
-		tshirt_index = table.indexof(skins_array.tshirt, skin_default.tshirt)
-	end
-	indexes.tshirt = tshirt_index
-
-	local pants_key = player:get_attribute("character_creator:pants")
-	local pants_index = table.indexof(skins_array.pants, pants_key)
-	if pants_index == -1 then
-		pants_index = table.indexof(skins_array.pants, skin_default.pants)
-	end
-	indexes.pants = pants_index
-
-	local shoes_key = player:get_attribute("character_creator:shoes")
-	local shoes_index = table.indexof(skins_array.shoes, shoes_key)
-	if shoes_index == -1 then
-		shoes_index = table.indexof(skins_array.shoes, skin_default.shoes)
-	end
-	indexes.shoes = shoes_index
+	load_data("skin")
+	load_data("face")
+	load_data("eyes")
+	load_data("hair")
+	load_data("tshirt")
+	load_data("pants")
+	load_data("shoes")
 end
 
 local function save_skin(player)
-	local indexes = skin_indexes[player]
+	local function save_data(data_name)
+		local indexes = skin_indexes[player]
+		local index   = indexes[data_name]
+		local key     = skins_array[data_name][index]
+		player:set_attribute("character_creator:" .. data_name, key)
+	end
 
-	local skin_key = skins_array.skin[indexes.skin]
-	player:set_attribute("character_creator:skin", skin_key)
-
-	local face_key = skins_array.face[indexes.face]
-	player:set_attribute("character_creator:face", face_key)
-
-	local eyes_key = skins_array.eyes[indexes.eyes]
-	player:set_attribute("character_creator:eyes", eyes_key)
-
-	local hair_style = skins_array.hair_style[indexes.hair_style]
-	player:set_attribute("character_creator:hair_style", hair_style)
-
-	local hair_key = skins_array.hair[indexes.hair]
-	player:set_attribute("character_creator:hair", hair_key)
-
-	local tshirt_key = skins_array.tshirt[indexes.tshirt]
-	player:set_attribute("character_creator:tshirt", tshirt_key)
-
-	local pants_key = skins_array.pants[indexes.pants]
-	player:set_attribute("character_creator:pants", pants_key)
-
-	local shoes_key = skins_array.shoes[indexes.shoes]
-	player:set_attribute("character_creator:shoes", shoes_key)
+	save_data("skin")
+	save_data("face")
+	save_data("eyes")
+	save_data("hair_style")
+	save_data("hair")
+	save_data("tshirt")
+	save_data("pants")
+	save_data("shoes")
 end
 
 local function change_skin(player)
