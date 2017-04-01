@@ -4,24 +4,23 @@ TODO List
 Cape
 Glasses(Accessories)
 Face Style(Sam style, this style, MC style, etc.)
-Colorize Textures(But Sokomine was against)
+Colorize Textures
 Skin Preview
 Randomize Skin
-Button Position
 ]]
 
 character_creator = {}
 local cc = character_creator
 
 local modpath = minetest.get_modpath("character_creator")
-local datafile = minetest.get_worldpath().."/character_creator.mt"
+local datafile = minetest.get_worldpath() .. "/character_creator.mt"
 
-dofile(modpath.."/skins.lua")
+dofile(modpath .. "/skins.lua")
 
 local function to_numberkey_table(tbl)
 	local tbl2 = {}
 	for str in pairs(tbl) do
-		tbl2[#tbl2+1] = str
+		tbl2[#tbl2 + 1] = str
 	end
 	return tbl2
 end
@@ -29,14 +28,14 @@ end
 local skins = {}
 minetest.after(0, function()
 	skins = {
-		skin = to_numberkey_table(cc.skin),
-		face = to_numberkey_table(cc.face),
-		hair = to_numberkey_table(cc.hair),
+		skin       = to_numberkey_table(cc.skin),
+		face       = to_numberkey_table(cc.face),
+		hair       = to_numberkey_table(cc.hair),
 		hair_style = to_numberkey_table(cc.hair_style),
-		eyes = to_numberkey_table(cc.eyes),
-		tshirt = to_numberkey_table(cc.tshirt),
-		pants = to_numberkey_table(cc.pants),
-		shoes = to_numberkey_table(cc.shoes)
+		eyes       = to_numberkey_table(cc.eyes),
+		tshirt     = to_numberkey_table(cc.tshirt),
+		pants      = to_numberkey_table(cc.pants),
+		shoes      = to_numberkey_table(cc.shoes)
 	}
 end)
 
@@ -45,51 +44,51 @@ local playerdata = {}
 local function show_formspec(name)
 	local data = playerdata[name]
 	minetest.show_formspec(name, "character_creator",
-		"size[15,9.5]"..
-		"bgcolor[#00000000]"..
+		"size[15,9.5]" ..
+		"bgcolor[#00000000]" ..
 		-- Gender
-		"button[10,;2.5,.5;cc_male;Male]"..
-		"button[12.5,;2.5,.5;cc_female;Female]"..
+		"button[10,;2.5,.5;cc_male;Male]" ..
+		"button[12.5,;2.5,.5;cc_female;Female]" ..
 		-- Height
-		"button[10,1.1;2.5,.5;cc_taller;Taller]"..
-		"button[10,2;2.5,.5;cc_shorter;Shorter]"..
+		"button[10,1.1;2.5,.5;cc_taller;Taller]" ..
+		"button[10,2;2.5,.5;cc_shorter;Shorter]" ..
 		-- Width
-		"button[12.5,1.1;2.5,.5;cc_wider;Wider]"..
-		"button[12.5,2;2.5,.5;cc_thinner;Thinner]"..
+		"button[12.5,1.1;2.5,.5;cc_wider;Wider]" ..
+		"button[12.5,2;2.5,.5;cc_thinner;Thinner]" ..
 		-- Skin
-		"button[10,2.75;5,1;cc_skin;"..skins.skin[data.skin].."]"..
-		"button[10,2.75;1,1;cc_skin_back;<<]"..
-		"button[14,2.75;1,1;cc_skin_next;>>]"..
+		"button[10,2.75;5,1;cc_skin;" .. skins.skin[data.skin] .. "]" ..
+		"button[10,2.75;1,1;cc_skin_back;<<]" ..
+		"button[14,2.75;1,1;cc_skin_next;>>]" ..
 		-- Face
-		"button[10,3.5;5,1;cc_face;"..skins.face[data.face].."]"..
-		"button[10,3.5;1,1;cc_face_back;<<]"..
-		"button[14,3.5;1,1;cc_face_next;>>]"..
+		"button[10,3.5;5,1;cc_face;" .. skins.face[data.face] .. "]" ..
+		"button[10,3.5;1,1;cc_face_back;<<]" ..
+		"button[14,3.5;1,1;cc_face_next;>>]" ..
 		-- Hair
-		"button[10,4.25;5,1;cc_hair;"..skins.hair[data.hair].."]"..
-		"button[10,4.25;1,1;cc_hair_back;<<]"..
-		"button[14,4.25;1,1;cc_hair_next;>>]"..
+		"button[10,4.25;5,1;cc_hair;" .. skins.hair[data.hair] .. "]" ..
+		"button[10,4.25;1,1;cc_hair_back;<<]" ..
+		"button[14,4.25;1,1;cc_hair_next;>>]" ..
 		-- Hair Style
-		"button[10,5;5,1;cc_hair_style;"..skins.hair_style[data.hair_style].."]"..
-		"button[10,5;1,1;cc_hair_style_back;<<]"..
-		"button[14,5;1,1;cc_hair_style_next;>>]"..
+		"button[10,5;5,1;cc_hair_style;" .. skins.hair_style[data.hair_style] .. "]" ..
+		"button[10,5;1,1;cc_hair_style_back;<<]" ..
+		"button[14,5;1,1;cc_hair_style_next;>>]" ..
 		-- Eyes
-		"button[10,5.75;5,1;cc_eyes;"..skins.eyes[data.eyes].."]"..
-		"button[10,5.75;1,1;cc_eyes_back;<<]"..
-		"button[14,5.75;1,1;cc_eyes_next;>>]"..
+		"button[10,5.75;5,1;cc_eyes;" .. skins.eyes[data.eyes] .. "]" ..
+		"button[10,5.75;1,1;cc_eyes_back;<<]" ..
+		"button[14,5.75;1,1;cc_eyes_next;>>]" ..
 		-- T-Shirt
-		"button[10,6.5;5,1;cc_tshirt;"..skins.tshirt[data.tshirt].."]"..
-		"button[10,6.5;1,1;cc_tshirt_back;<<]"..
-		"button[14,6.5;1,1;cc_tshirt_next;>>]"..
+		"button[10,6.5;5,1;cc_tshirt;" .. skins.tshirt[data.tshirt] .. "]" ..
+		"button[10,6.5;1,1;cc_tshirt_back;<<]" ..
+		"button[14,6.5;1,1;cc_tshirt_next;>>]" ..
 		-- Pants
-		"button[10,7.25;5,1;cc_pants;"..skins.pants[data.pants].."]"..
-		"button[10,7.25;1,1;cc_pants_back;<<]"..
-		"button[14,7.25;1,1;cc_pants_next;>>]"..
+		"button[10,7.25;5,1;cc_pants;" .. skins.pants[data.pants] .. "]" ..
+		"button[10,7.25;1,1;cc_pants_back;<<]" ..
+		"button[14,7.25;1,1;cc_pants_next;>>]" ..
 		-- Shoes
-		"button[10,8;5,1;cc_shoes;"..skins.shoes[data.shoes].."]"..
-		"button[10,8;1,1;cc_shoes_back;<<]"..
-		"button[14,8;1,1;cc_shoes_next;>>]"..
+		"button[10,8;5,1;cc_shoes;" .. skins.shoes[data.shoes] .. "]" ..
+		"button[10,8;1,1;cc_shoes_back;<<]" ..
+		"button[14,8;1,1;cc_shoes_next;>>]" ..
 		-- Done
-		"button_exit[10,9;2.5,.5;cc_done;Done]"..
+		"button_exit[10,9;2.5,.5;cc_done;Done]" ..
 		"button_exit[12.5,9;2.5,.5;cc_cancel;Cancel]"
 	)
 end
@@ -101,17 +100,17 @@ if input then
 end
 
 local skin_def = {
-	gender = "Male",
-	height = 1,
-	width = 1,
-	skin = 4,
-	face = 4,
-	hair = 8,
+	gender     = "Male",
+	height     = 1,
+	width      = 1,
+	skin       = 4,
+	face       = 4,
+	hair       = 8,
 	hair_style = 3,
-	eyes = 5,
-	tshirt = 4,
-	pants = 1,
-	shoes = 3
+	eyes       = 5,
+	tshirt     = 4,
+	pants      = 1,
+	shoes      = 3
 }
 
 local function change_skin(player)
@@ -120,12 +119,12 @@ local function change_skin(player)
 
 	local texture
 	local flag = pcall(function()
-		texture = cc.skin[skins.skin[data.skin]].."^"..
-			cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]].."^"..
-			cc.eyes[skins.eyes[data.eyes]].."^"..
-			cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]].."^"..
-			cc.tshirt[skins.tshirt[data.tshirt]].."^"..
-			cc.pants[skins.pants[data.pants]].."^"..
+		texture = cc.skin[skins.skin[data.skin]] .. "^" ..
+			cc.face[skins.face[data.face]][data.gender][skins.skin[data.skin]] .. "^" ..
+			cc.eyes[skins.eyes[data.eyes]] .. "^" ..
+			cc.hair[skins.hair[data.hair]][data.gender][skins.hair_style[data.hair_style]] .. "^" ..
+			cc.tshirt[skins.tshirt[data.tshirt]] .. "^" ..
+			cc.pants[skins.pants[data.pants]] .. "^" ..
 			cc.shoes[skins.shoes[data.shoes]]
 	end)
 
@@ -140,11 +139,11 @@ local function change_skin(player)
 		multiskin.layers[name].skin = texture
 		armor:set_player_armor(player)
 		multiskin:set_player_textures(player,{textures={texture}})
-		elseif minetest.get_modpath("3d_armor") then
-			armor.textures[name].skin = texture
-			armor:set_player_armor(player)
-		else
-			player:set_properties({textures={texture}})
+	elseif minetest.get_modpath("3d_armor") then
+		armor.textures[name].skin = texture
+		armor:set_player_armor(player)
+	else
+		player:set_properties({textures={texture}})
 	end
 
 	-- Save data
@@ -243,15 +242,15 @@ minetest.register_chatcommand("character_creator", {
 	end
 })
 
-if rawget(_G, "unified_inventory") then
+if minetest.global_exists("unified_inventory") then
 	unified_inventory.register_button("character_creator", {
-		type = "image",
-		image = "inventory_plus_character_creator.png",
+		type   = "image",
+		image  = "inventory_plus_character_creator.png",
 		action = function(player)
 			show_formspec(player:get_player_name())
 		end
 	})
-elseif rawget(_G, "inventory_plus") then
+elseif minetest.global_exists("inventory_plus") then
 	minetest.register_on_joinplayer(function(player)
 		inventory_plus.register_button(player, "character_creator", "Character Creator")
 	end)
