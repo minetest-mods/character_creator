@@ -199,6 +199,8 @@ local function change_skin(player)
 		}
 	})
 
+	local name = player:get_player_name()
+
 	if minetest.get_modpath("multiskin") then
 		multiskin.layers[name].skin = texture
 		armor:set_player_armor(player)
