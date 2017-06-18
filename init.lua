@@ -1,6 +1,11 @@
 character_creator = {}
 character_creator.skins = dofile(minetest.get_modpath("character_creator") .. "/skins.lua")
 
+local skinsdb
+if minetest.get_modpath("skinsdb") and minetest.global_exists("skins") then
+	skinsdb = skins
+end
+
 local skin_default = {
 	gender     = "Male",
 	height     = 1,
@@ -150,44 +155,44 @@ local function save_skin(player)
 	save_data("shoes")
 end
 
-local function change_skin(player)
+local function get_texture(player)
 	local indexes = skin_indexes[player]
+	local texture = ""
+	local gender = player:get_attribute("character_creator:gender")
 
-	local texture = (function()
-		local texture = ""
-		local gender = player:get_attribute("character_creator:gender")
+	local skin_key = skins_array.skin[indexes.skin]
+	local skin = skins.skin[skin_key]
+	texture = texture .. skin
 
-		local skin_key = skins_array.skin[indexes.skin]
-		local skin = skins.skin[skin_key]
-		texture = texture .. skin
+	local face_key = skins_array.face[indexes.face]
+	local face = skins.face[face_key][gender][skin_key]
+	texture = texture .. "^" .. face
 
-		local face_key = skins_array.face[indexes.face]
-		local face = skins.face[face_key][gender][skin_key]
-		texture = texture .. "^" .. face
+	local eyes_key = skins_array.eyes[indexes.eyes]
+	local eyes = skins.eyes[eyes_key]
+	texture = texture .. "^" .. eyes
 
-		local eyes_key = skins_array.eyes[indexes.eyes]
-		local eyes = skins.eyes[eyes_key]
-		texture = texture .. "^" .. eyes
+	local hair_style = skins_array.hair_style[indexes.hair_style]
+	local hair_key = skins_array.hair[indexes.hair]
+	local hair = skins.hair[hair_key][gender][hair_style]
+	texture = texture .. "^" .. hair
 
-		local hair_style = skins_array.hair_style[indexes.hair_style]
-		local hair_key = skins_array.hair[indexes.hair]
-		local hair = skins.hair[hair_key][gender][hair_style]
-		texture = texture .. "^" .. hair
+	local tshirt_key = skins_array.tshirt[indexes.tshirt]
+	local tshirt = skins.tshirt[tshirt_key]
+	texture = texture .. "^" .. tshirt
 
-		local tshirt_key = skins_array.tshirt[indexes.tshirt]
-		local tshirt = skins.tshirt[tshirt_key]
-		texture = texture .. "^" .. tshirt
+	local pants_key = skins_array.pants[indexes.pants]
+	local pants = skins.pants[pants_key]
+	texture = texture .. "^" .. pants
 
-		local pants_key = skins_array.pants[indexes.pants]
-		local pants = skins.pants[pants_key]
-		texture = texture .. "^" .. pants
+	local shoes_key = skins_array.shoes[indexes.shoes]
+	local shoes = skins.shoes[shoes_key]
+	texture = texture .. "^" .. shoes
+	return texture
+end
 
-		local shoes_key = skins_array.shoes[indexes.shoes]
-		local shoes = skins.shoes[shoes_key]
-		texture = texture .. "^" .. shoes
-
-		return texture
-	end)()
+local function change_skin(player)
+	local texture = get_texture(player)
 
 	local width  = tonumber(player:get_attribute("character_creator:width"))
 	local height = tonumber(player:get_attribute("character_creator:height"))
@@ -217,7 +222,31 @@ end
 
 minetest.register_on_joinplayer(function(player)
 	load_skin(player)
-	minetest.after(0, change_skin, player)
+	if skinsdb then
+		local playername = player:get_player_name()
+		local skinname = "character_creator:"..playername
+		local skin_obj = skinsdb.get(skinname) or skinsdb.new(skinname)
+		-- redefinitions
+		function skin_obj:set_skin(player)
+			change_skin(player)
+			show_formspec(player)
+		end
+		function skin_obj:get_texture()
+			return get_texture(self:get_meta("player"))
+		end
+
+		-- set data
+		skin_obj:set_preview("inventory_plus_character_creator.png")
+		skin_obj:set_meta("name","Character Creator")
+		skin_obj:set_meta("assignment","player:"..playername)
+		skin_obj:set_meta("player", player)
+		--check if active and start the update (avoid race condition for both register_on_joinplayer)
+		if skinsdb.get_player_skin(player):get_key() == skinname then
+			minetest.after(0, change_skin, player)
+		end
+	else
+		minetest.after(0, change_skin, player)
+	end
 end)
 
 local skin_temp = {}
@@ -325,6 +354,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 	end
 
+	if skinsdb then
+		-- set selected
+		skinsdb.assign_player_skin(player, "character_creator:"..player:get_player_name())
+	end
 	change_skin(player)
 end)
 
