@@ -238,6 +238,8 @@ minetest.register_on_joinplayer(function(player)
 		-- set data
 		skin_obj:set_preview("inventory_plus_character_creator.png")
 		skin_obj:set_meta("name","Character Creator")
+		--skin_obj:set_meta("author", "???")
+		skin_obj:set_meta("license", "MIT / CC-BY-SA 3.0 Unported")
 		skin_obj:set_meta("assignment","player:"..playername)
 		skin_obj:set_meta("player", player)
 		--check if active and start the update (avoid race condition for both register_on_joinplayer)
