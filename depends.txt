@@ -3,3 +3,4 @@ multiskin?
 inventory_plus?
 unified_inventory?
 skinsdb?
+sfinv_buttons?
