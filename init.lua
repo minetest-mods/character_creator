@@ -107,15 +107,15 @@ local function load_skin(player)
 
 	local player_meta = player:get_meta()
 
-	if not player_meta:get_string("character_creator:gender") then
+	if not player_meta:contains("character_creator:gender") then
 		player_meta:set_string("character_creator:gender", skin_default.gender)
 	end
 
-	if not player_meta:get_float("character_creator:width") then
+	if not player_meta:contains("character_creator:width") then
 		player_meta:set_float("character_creator:width", skin_default.width)
 	end
 
-	if not player_meta:get_float("character_creator:height") then
+	if not player_meta:contains("character_creator:height") then
 		player_meta:set_float("character_creator:height", skin_default.height)
 	end
 
