@@ -237,8 +237,8 @@ if skinsdb then
 		skin_obj:set_meta("format", "1.0")
 		skin_obj:set_meta("visual_size_x", player_meta:get_float("character_creator:width"))
 		skin_obj:set_meta("visual_size_y", player_meta:get_float("character_creator:height"))
-		skin_obj:apply_skin_to_player(player)
-		skinsdb.assign_player_skin(player, "character_creator:"..playername)
+		skinsdb.assign_player_skin(player, skinname)
+		skinsdb.update_player_skin(player)
 		save_skin(player)
 	end
 end
@@ -262,7 +262,6 @@ minetest.register_on_joinplayer(function(player)
 		end
 
 		-- set data
-		skin_obj:set_preview("inventory_plus_character_creator.png")
 		skin_obj:set_meta("name","Character Creator")
 		--skin_obj:set_meta("author", "???")
 		skin_obj:set_meta("license", "MIT / CC-BY-SA 3.0 Unported")
