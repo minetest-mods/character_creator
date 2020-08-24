@@ -211,15 +211,27 @@ local function change_skin(player)
 		}
 	})
 
-	local name = player:get_player_name()
-
 	if minetest.get_modpath("multiskin") then
-		multiskin.layers[name].skin = texture
-		armor:set_player_armor(player)
-		multiskin:set_player_textures(player, {textures = {texture}})
+		local name = player:get_player_name()
+		minetest.after(0, function(name)
+			local player = minetest.get_player_by_name(name)
+			if player then
+				multiskin.layers[player_name].skin = texture
+				armor:set_player_armor(player)
+				multiskin:set_player_textures(player, {textures = {texture}})
+			end
+		end, name)
+
 	elseif minetest.get_modpath("3d_armor") then
-		armor.textures[name].skin = texture
-		armor:set_player_armor(player)
+		local name = player:get_player_name()
+		minetest.after(0, function(name)
+			local player = minetest.get_player_by_name(name)
+			if player then
+				armor.textures[name].skin = texture
+				armor:set_player_armor(player)
+			end
+		end, name)
+
 	else
 		player:set_properties({textures = {texture}})
 	end
