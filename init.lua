@@ -147,17 +147,18 @@ local function show_formspec(player)
 			indexes = table.copy(indexes)
 		}
 
-		-- set_camera() is applied after a 1 frame delay (client side), thus delay.
+		local old_camera_mode = player:get_camera().mode
 		player:set_camera({
 			mode = "third_front"
 		})
 		player:set_look_vertical(math.pi * -0.08)
 
+		-- Restore. Hopefully the client rendered 1 frame in the meantime to apply the mode.
 		core.after(1, function()
 			-- Ensure the player has not already left.
 			if player:get_player_name() then
 				player:set_camera({
-					mode = "any"
+					mode = old_camera_mode
 				})
 			end
 		end)
